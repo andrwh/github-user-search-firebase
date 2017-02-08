@@ -30,6 +30,10 @@ class UserSearch extends React.Component {
     this.setState({
       input: e.target.value
     })
+
+    if (e.target.value.length === 0) {
+      this.props.resetSearch()
+    }
   }
 
   render() {

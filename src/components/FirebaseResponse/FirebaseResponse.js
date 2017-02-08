@@ -1,8 +1,9 @@
 import React from 'react'
 
-const FirebaseResponse = (state, user) => {
+const FirebaseResponse = ({state, user}) => {
   if (state === null) { return null }
-  const username = user && user.name || user && user.login
+  const username = user.login
+
   return state ?
     <h4>Success: user {username} added to the db.</h4>
     :
