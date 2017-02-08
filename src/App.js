@@ -12,6 +12,7 @@ import config from './config'
 import UserSearch from './components/UserSearch'
 import UserResults from './components/UserResults'
 import ErrorResults from './components/ErrorResults'
+import FirebaseResponse from './components/FirebaseResponse'
 
 // styles - using basscss
 import 'ace-css/css/ace.min.css'
@@ -33,7 +34,7 @@ class App extends Component {
 
     this.state = {
       user: null,
-      saved: false,
+      saved: null,
     }
 
     this.firebase = null
@@ -121,7 +122,12 @@ class App extends Component {
         <UserSearch
           callback={this.handleUserSearch}
           resetSearch={this.handleSearchReset} />
-        {userFound && <UserResults {...user} />}
+        {userFound &&
+          <div>
+            <UserResults {...user} />
+            <FirebaseResponse state={saved} user={user} />
+          </div>
+        }
         {!userFound && <ErrorResults {...user} />}
       </div>
     );
