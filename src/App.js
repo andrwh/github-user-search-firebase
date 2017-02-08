@@ -11,6 +11,7 @@ import config from './config'
 // custom components
 import UserSearch from './components/UserSearch'
 import UserResults from './components/UserResults'
+import UserTable from './components/UserTable'
 import ErrorResults from './components/ErrorResults'
 import FirebaseResponse from './components/FirebaseResponse'
 
@@ -35,13 +36,25 @@ class App extends Component {
     this.state = {
       user: null,
       saved: null,
+      users: {}
     }
 
     this.firebase = null
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.firebase = firebase.initializeApp(config.firebaseConfig)
+    let connectedRef = this.firebase.database().ref(".info/connected");
+    connectedRef.on('value', (snap) => {
+      if (snap.val() === true) {
+        this.firebase.database().ref('users').limitToLast(100)
+          .on('value', (snapshot) => {
+            this.setState({
+              users: snapshot.val()
+            })
+          })
+      }
+    })
   }
 
   // could organize this into redux
@@ -113,11 +126,11 @@ class App extends Component {
   }
 
   render() {
-    const { user, saved } = this.state
+    const { user, saved, users} = this.state
     const userFound = user && user.hasOwnProperty('id') !== false
 
     return (
-      <div className="max-width-3 mx-auto">
+      <div className="max-width-3 mx-auto" style={{minWidth: 800}}>
         <h1>Github User Search with FireBase</h1>
         <UserSearch
           callback={this.handleUserSearch}
@@ -129,6 +142,8 @@ class App extends Component {
           </div>
         }
         {!userFound && <ErrorResults {...user} />}
+
+        <UserTable data={users} />
       </div>
     );
   }
