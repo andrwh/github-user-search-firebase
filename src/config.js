@@ -8,5 +8,8 @@ export default {
     databaseURL: "https://reside-user-search.firebaseio.com",
     storageBucket: "reside-user-search.appspot.com",
     messagingSenderId: "148660920797"
+  },
+  api: {
+    userSearch: "https://api.github.com/users"
   }
 }

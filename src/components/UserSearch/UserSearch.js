@@ -10,8 +10,23 @@ class UserSearch extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.refs.input.addEventListener('search', (e) => {
+      if (e.target.value.length === 0) {
+        this.props.resetSearch()
+      }
+    })
+  }
+
+  handleKeyPress = (e) => {
+    const isEnter = e.key === 'Enter'
+
+    if (isEnter) {
+      this.props.callback.call(this, this.state.input)
+    }
+  }
+
   handleChange = (e) => {
-    // watch for enter key or blur ?
     this.setState({
       input: e.target.value
     })
@@ -19,13 +34,25 @@ class UserSearch extends React.Component {
 
   render() {
     const { input } = this.state
-    
+
     return (
       <div>
-        <input id="user-search" type="search" className="input" value={input} onChange={this.handleChange}/>
+        <input
+          id="user-search"
+          type="search"
+          className="input"
+          value={input}
+          onKeyPress={this.handleKeyPress}
+          onChange={this.handleChange}
+          ref="input" />
       </div>
     )
   }
 }
 
 export default UserSearch
+
+UserSearch.defaultProps = {
+  callback: () => {},
+  resetSearch: () => {},
+}
